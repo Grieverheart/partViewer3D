@@ -1,0 +1,23 @@
+SRC=$(wildcard *.c)
+OBJ=$(SRC:.c=.o)
+EXE=partViewer
+
+CC=gcc
+CFLAGS=-Wall -O3 -std=c99
+LDFLAGS=-lGLU -lglut -lGL -lm
+RM=del
+
+%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+.PHONY: all
+all: $(EXE)
+	@echo Done
+
+$(EXE): $(OBJ)
+	$(CC) $(OBJ) $(LDFLAGS) -o $@
+	
+.PHONY: clean
+clean:
+	-$(RM) $(OBJ)
+	@echo Clean Done!
