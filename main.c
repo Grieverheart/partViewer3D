@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
 #include "uint.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -22,6 +23,7 @@
 ////////////////////////////////////////////////////////
 /**/int screen_width=0,screen_height=0;		   		/**/
 /**/bool redisplay=false;					   		/**/
+/**/bool use_obj;									/**/
 /**/float zoom=0;							   		/**/
 /**/static float fps=0.0;	 						/**/
 ////////////////////////////////////////////////////////
@@ -144,14 +146,34 @@ static void init(void){
 }
 
 int main(int argc,char *argv[] ){
+
+	uint obj_index=0;
+	uint coords_index=0;
+
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
 	glutInitWindowSize(600,600);
 	glutInitWindowPosition(100,100);
 	glutCreateWindow("partViewer3D");
 	
+	//////////* Command line argument processing */////////////
+	for(uint i=0;i<argc;i++){
+		if(strcmp(argv[i],"-obj")==0){
+			obj_index=i+1;
+			use_obj=true;
+			break;
+		}
+	}
+	for(uint i=0;i<argc;i++){
+		if(strcmp((argv[i]+strlen(argv[i])-3),"dat")==0){
+			coords_index=i;
+			break;
+		}
+	}
+	/////////////////////////////////////////////////////////////
 	
-	parseCoords(argv[1],"\t");
+	parseCoords(argv[coords_index],"\t");
+	if(use_obj)parseObj(argv[obj_index]);
 	init();
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);

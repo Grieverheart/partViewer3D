@@ -12,4 +12,10 @@ static const GLfloat fov=60.0f;
 extern float zoom;
 extern bool perspective;
 extern bool redisplay;
+extern bool use_obj;
+extern uint *obj_faces;
+extern GLfloat *obj_vertices;
+extern uint obj_nV;//Number of vertices
+extern uint obj_nF;//Number of faces
+extern uint obj_nVpF; //Number of vertices per face
 #endif

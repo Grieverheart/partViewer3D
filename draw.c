@@ -4,11 +4,13 @@
 #include <stdlib.h>
 #include "uint.h"
 #include "draw.h"
+#include <math.h>
 #include "common.h"
 #include "colors.h"
 
 //////////////////////////////////////////////////////
 //extern// int screen_width,screen_height; 	      /**/
+//extern// bool use_obj							  /**/
 //////////////////////////////////////////////////////
 
 void glPrint(char *s,int x, int y){
@@ -142,6 +144,55 @@ void createBox(float *boxMatrix){
 	glEnable(GL_LIGHTING);
 }
 
+static inline void cross3fn(GLfloat *a, GLfloat *b, GLfloat *result){
+	GLfloat norm=0.0f;
+	result[0]=a[1]*b[2]-a[2]*b[1];
+	result[1]=a[2]*b[0]-a[0]*b[2];
+	result[2]=a[0]*b[1]-a[1]*b[0];
+	for(uint i=0;i<3;i++){
+		norm+=result[i]*result[i];
+	}
+	norm=sqrt(norm);
+	for(uint i=0;i<3;i++){
+		result[i]/=norm;
+	}
+}
+
+static inline void obj_shape(void){
+	GLfloat normal[3];
+	GLfloat vec1[3],vec2[3];
+	uint vertex=0;
+	uint vert1=0,vert2=0,vert3=0;
+	GLenum mode;
+	
+	if(obj_nVpF==3){
+		mode=GL_TRIANGLES;
+	}
+	else if(obj_nVpF==4){
+		mode=GL_QUADS;
+	}
+	else{
+		mode=GL_POLYGON;
+	}
+	for(uint i=0;i<obj_nF;i++){
+		vert1=obj_faces[i*obj_nVpF];
+		vert2=obj_faces[i*obj_nVpF+1];
+		vert3=obj_faces[i*obj_nVpF+2];
+		for(uint v=0;v<3;v++){
+			vec1[v]=obj_vertices[3*vert3+v]-obj_vertices[3*vert2+v];
+			vec2[v]=obj_vertices[3*vert1+v]-obj_vertices[3*vert2+v];
+		}
+		cross3fn(vec1,vec2,normal);
+		glBegin(mode);
+			glNormal3fv(normal);
+			for(uint j=0;j<obj_nVpF;j++){
+				vertex=obj_faces[i*obj_nVpF+j];
+				glVertex3fv((obj_vertices+3*vertex));
+			}
+		glEnd();
+	}
+}
+
 GLuint createShapeDL(void){
 	GLuint shapeDL;
 	shapeDL=glGenLists(1);
@@ -151,8 +202,8 @@ GLuint createShapeDL(void){
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,shininess);
 	
 	glNewList(shapeDL,GL_COMPILE);
-		// glutSolidSphere(0.5f,30,30);
-		glutSolidCube(1.0f);
+		if(use_obj)obj_shape();
+		else glutSolidSphere(0.5f,30,30);
 	glEndList();
 	
 	return (shapeDL);
