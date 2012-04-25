@@ -10,6 +10,7 @@ extern GLuint sphereDL;
 extern GLfloat ThisRotMatrix[16];
 static const GLfloat fov=60.0f;
 extern float zoom;
+extern float init_zoom;
 extern bool perspective;
 extern bool redisplay;
 extern bool use_obj;

@@ -23,6 +23,7 @@
 /**/bool render_points=false;		/**/
 /**/bool menu_open=false;			/**/
 /**/bool perspective=true;			/**/
+/**/bool pause=false;				/**/
 ////////////////////////////////////////
 
 static void keyOps(void);
@@ -72,7 +73,7 @@ static void keyOps(void){
 	        glLoadIdentity();
 	        GLfloat aspect=(GLfloat)screen_width/(GLfloat)screen_height;
 	        if(!perspective){
-		        GLfloat height = tan((fov+zoom)*PI/360.0f) * boxMatrix[8]*1.7f;//Magic Number 1.7: We translated 1.7*boxMatrix away
+		        GLfloat height = tan((fov+zoom)*PI/360.0f) * (init_zoom-boxMatrix[8]*0.5f);//Magic Number 1.7: We translated 1.7*boxMatrix away
 		        glOrtho(-height*aspect, height*aspect, -height, height, 1.0f, 50.0f);
 	        }
 	        else gluPerspective(fov+zoom, aspect , 1.0f, 50.0f);
@@ -83,6 +84,18 @@ static void keyOps(void){
 		if(keyMap['c']){ //Clear all Selections
 			for(uint i=0;i<nPart;i++)particle[i].selected=0;
 			redisplay=true;
+		}
+		
+		if(keyMap['+']){ 
+			ani_speed/=2.0f;
+		}
+		
+		if(keyMap['-']){ 
+			ani_speed*=2.0f;
+		}
+		
+		if(keyMap['s']){ 
+			pause=!pause;
 		}
 	}
 	

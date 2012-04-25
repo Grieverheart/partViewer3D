@@ -25,7 +25,12 @@
 /**/bool redisplay=false;					   		/**/
 /**/bool use_obj;									/**/
 /**/float zoom=0;							   		/**/
-/**/static float fps=0.0;	 						/**/
+/**/float init_zoom=22.0f;							/**/
+/**/static float fps=60.0;	 						/**/
+/**/bool animation=false;							/**/
+/**/char **ani_matrix;								/**/
+/**/uint ani_files=0;								/**/
+/**/float ani_speed=1000;							/**/
 ////////////////////////////////////////////////////////
 /**/GLuint sphereDL;      							/**/
 ////////////////////////////////////////////////////////
@@ -50,7 +55,7 @@ static void countFPS(void){
 }
 
 void renderShape(void){
-	glTranslatef(0.0f,0.0f,-2.2f*boxMatrix[8]);//Fix Zoom
+	glTranslatef(0.0f,0.0f,-init_zoom);//Fix Zoom
 	if(menu_open)glTranslatef(boxMatrix[0]/2.0f,0.0f,0.0f);
 	glMultMatrixf(ThisRotMatrix);
 	glTranslatef(-boxMatrix[0]/2.0f,-boxMatrix[4]/2.0f,-boxMatrix[8]/2.0f); //Center Box
@@ -94,6 +99,21 @@ static void display(void){
 
 static void idle(void){
 
+	static uint anim=0;
+	static uint last_time=0;
+	static uint this_time=0;
+	
+	if(animation&&!pause){
+		if(anim>=ani_files)anim=0;
+		this_time=glutGet(GLUT_ELAPSED_TIME);
+		if(this_time-last_time>=ani_speed){
+			redisplay=true;
+			parseCoords(ani_matrix[anim],"\t");
+			anim++;
+			last_time=this_time;
+		}
+	}
+	
 	idleArcball();
 	
 	if(redisplay){
@@ -164,15 +184,27 @@ int main(int argc,char *argv[] ){
 			break;
 		}
 	}
-	for(uint i=0;i<argc;i++){
-		if(strcmp((argv[i]+strlen(argv[i])-3),"dat")==0){
-			coords_index=i;
-			break;
+	if(argc<5){
+		for(uint i=0;i<argc;i++){
+			if(strcmp((argv[i]+strlen(argv[i])-3),"dat")==0){
+				coords_index=i;
+				break;
+			}
+		}
+	}
+	else{
+		animation=true;
+		ani_files=argc-3;
+		printf("ani_files:%d\n",ani_files);
+		ani_matrix=malloc(ani_files*sizeof(*ani_matrix));
+		for(uint i=0;i<ani_files;i++){
+			ani_matrix[i]=malloc(strlen(argv[i+3])*sizeof(ani_matrix));
+			strcpy(ani_matrix[i], argv[i+3]);
 		}
 	}
 	/////////////////////////////////////////////////////////////
 	
-	parseCoords(argv[coords_index],"\t");
+	if(!animation)parseCoords(argv[coords_index],"\t");
 	if(use_obj)parseObj(argv[obj_index]);
 	init();
 	glutDisplayFunc(display);

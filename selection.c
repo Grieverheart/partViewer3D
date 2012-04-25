@@ -20,7 +20,7 @@ static void renderInSelection(void){
 	glDisable(GL_BLEND);
 	
 	glLoadIdentity(); //Just to be sure
-	glTranslatef(0.0f,0.0f,-2.2f*boxMatrix[8]);//Fix Zoom
+	glTranslatef(0.0f,0.0f,-22.0f);//Fix Zoom
 	glMultMatrixf(ThisRotMatrix);
 	glTranslatef(-boxMatrix[0]/2.0f,-boxMatrix[4]/2.0f,-boxMatrix[8]/2.0f); //Center Box
 	
