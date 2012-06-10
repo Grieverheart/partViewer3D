@@ -33,7 +33,7 @@ void parseCoords(char *file, char *delim){
 		for(t1=strtok(line,delim);t1!=NULL;t1=strtok(NULL,delim)){
 			if(i==1){
 				nPart=(uint)atoi(t1);
-				particle=malloc(nPart*sizeof(*particle));
+				if(particle == NULL) particle=malloc(nPart*sizeof(*particle));
 			}
 			else if(i==2){
 				boxMatrix[u]=atof(t1);
@@ -47,7 +47,6 @@ void parseCoords(char *file, char *delim){
 		if(i>2){
 		    particle[i-3].selColor[0]=(GLubyte)((i-3)%256);
 		    particle[i-3].selColor[1]=(GLubyte)((i-3)/256);
-		    particle[i-3].selected=0;
 		}
 		i++;
 	}

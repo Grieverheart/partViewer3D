@@ -101,7 +101,7 @@ void screenFade(void){
 void createBox(float *boxMatrix){
 	
 	glDisable(GL_LIGHTING);
-	
+	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(4.0f);
 	
 	glBegin(GL_LINES);
@@ -114,33 +114,40 @@ void createBox(float *boxMatrix){
 	glPushMatrix();
 	glTranslatef(boxMatrix[0]+boxMatrix[1],boxMatrix[3]+boxMatrix[4],boxMatrix[6]+boxMatrix[7]);
 	glBegin(GL_LINES);
-		for(uint i=0;i<3;i++){
-			glVertex3f(0.0f,0.0f,0.0f);
-			glVertex3f(-boxMatrix[i],-boxMatrix[i+3],boxMatrix[i+6]);
-		}
-	glEnd();
-	glPopMatrix();
-		
-	glPushMatrix();
-	glTranslatef(boxMatrix[0]+boxMatrix[2],boxMatrix[3]+boxMatrix[5],boxMatrix[6]+boxMatrix[8]);
-	glBegin(GL_LINES);
-		for(uint i=0;i<3;i++){
-			glVertex3f(0.0f,0.0f,0.0f);
-			glVertex3f(-boxMatrix[i],boxMatrix[i+3],-boxMatrix[i+6]);
-		}
-	glEnd();
-	glPopMatrix();
-		
-	glPushMatrix();
-	glTranslatef(boxMatrix[1]+boxMatrix[2],boxMatrix[4]+boxMatrix[5],boxMatrix[7]+boxMatrix[8]);
-	glBegin(GL_LINES);
-		for(uint i=0;i<3;i++){
-			glVertex3f(0.0f,0.0f,0.0f);
-			glVertex3f(boxMatrix[i],-boxMatrix[i+3],-boxMatrix[i+6]);
-		}
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[0],0.0f,0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[1],-boxMatrix[4],0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(boxMatrix[2],boxMatrix[5],boxMatrix[8]);
 	glEnd();
 	glPopMatrix();
 	
+	glPushMatrix();
+	glTranslatef(boxMatrix[0]+boxMatrix[2],boxMatrix[3]+boxMatrix[5],boxMatrix[6]+boxMatrix[8]);
+	glBegin(GL_LINES);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[0],0.0f,0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(boxMatrix[1],boxMatrix[4],0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[2],-boxMatrix[5],-boxMatrix[8]);
+	glEnd();
+	glPopMatrix();
+	
+	glPushMatrix();
+	glTranslatef(boxMatrix[1]+boxMatrix[2],boxMatrix[4]+boxMatrix[5],boxMatrix[7]+boxMatrix[8]);
+	glBegin(GL_LINES);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(boxMatrix[0],0.0f,0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[1],-boxMatrix[4],0.0f);
+		glVertex3f(0.0f,0.0f,0.0f);
+		glVertex3f(-boxMatrix[2],-boxMatrix[5],-boxMatrix[8]);
+	glEnd();
+	glPopMatrix();
+	
+	glDisable(GL_LINE_SMOOTH);
 	glEnable(GL_LIGHTING);
 }
 

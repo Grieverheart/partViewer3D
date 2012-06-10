@@ -12,6 +12,8 @@
 ////////////////////////////////////////
 //extern// tPart *particle; 		/**/
 //extern// bool arcball_snap;		/**/
+//extern// float ani_speed;			/**/
+//extern// float scale;				/**/
 ////////////////////////////////////////
 /**/bool keyMap[256];	  			/**/
 /**/bool keySpMap[256];				/**/
@@ -73,7 +75,7 @@ static void keyOps(void){
 	        glLoadIdentity();
 	        GLfloat aspect=(GLfloat)screen_width/(GLfloat)screen_height;
 	        if(!perspective){
-		        GLfloat height = tan((fov+zoom)*PI/360.0f) * (init_zoom-boxMatrix[8]*0.5f);//Magic Number 1.7: We translated 1.7*boxMatrix away
+		        GLfloat height = tan((fov+zoom)*PI/360.0f) * (-init_zoom-boxMatrix[8]*0.5f);//Magic Number 1.7: We translated 1.7*boxMatrix away
 		        glOrtho(-height*aspect, height*aspect, -height, height, 1.0f, 50.0f);
 	        }
 	        else gluPerspective(fov+zoom, aspect , 1.0f, 50.0f);
@@ -82,7 +84,11 @@ static void keyOps(void){
 		}
 		
 		if(keyMap['c']){ //Clear all Selections
-			for(uint i=0;i<nPart;i++)particle[i].selected=0;
+			for(uint i=0;i<nPart;i++){
+				particle[i].selected=0;
+				particle[i].hidden=0;
+			}
+			scale = 1.0;
 			redisplay=true;
 		}
 		
@@ -96,6 +102,16 @@ static void keyOps(void){
 		
 		if(keyMap['s']){ 
 			pause=!pause;
+		}
+		
+		if(keyMap[']']){ 
+			scale *= 1.05;
+			redisplay=true;
+		}
+		
+		if(keyMap['[']){ 
+			scale /= 1.05;
+			redisplay=true;
 		}
 	}
 	

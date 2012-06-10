@@ -25,12 +25,14 @@ static void renderInSelection(void){
 	glTranslatef(-boxMatrix[0]/2.0f,-boxMatrix[4]/2.0f,-boxMatrix[8]/2.0f); //Center Box
 	
 	for(uint i=0;i<nPart;i++){
-		glPushMatrix();
-		glTranslatef(particle[i].coords[0],particle[i].coords[1],particle[i].coords[2]);
-		glRotatef(particle[i].rotation[0],particle[i].rotation[1],particle[i].rotation[2],particle[i].rotation[3]);
-		glColor3ub(particle[i].selColor[0],particle[i].selColor[1],0);//Set Color Id for Selection
-		glCallList(sphereDL);
-		glPopMatrix();
+		if(!particle[i].hidden){
+			glPushMatrix();
+			glTranslatef(particle[i].coords[0],particle[i].coords[1],particle[i].coords[2]);
+			glRotatef(particle[i].rotation[0],particle[i].rotation[1],particle[i].rotation[2],particle[i].rotation[3]);
+			glColor3ub(particle[i].selColor[0],particle[i].selColor[1],0);//Set Color Id for Selection
+			glCallList(sphereDL);
+			glPopMatrix();
+		}
 	}
 	
 	glEnable(GL_LIGHTING);
@@ -58,4 +60,20 @@ void selectParticle(int mouse_x,int mouse_y){
 											particle[selection].coords[1],
 											particle[selection].coords[2]);
 	}
+}
+
+void hideParticle(int mouse_x,int mouse_y){
+	GLint viewport[4];
+	GLubyte pixel[3];
+	static uint selection=0;
+	
+	renderInSelection();
+	
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	
+	glReadPixels(mouse_x,viewport[3]-mouse_y,1,1,GL_RGB,GL_UNSIGNED_BYTE,(GLvoid*)pixel);
+	
+	selection=(uint)(pixel[0]+pixel[1]*256);
+	if(selection>=nPart)return;//Background is 51,51,51
+	particle[selection].hidden=!particle[selection].hidden;
 }

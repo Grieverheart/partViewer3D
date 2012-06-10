@@ -144,6 +144,10 @@ void onMouse(int button, int state, int x, int y){
 				last_my=cur_my;
 			}
 		}
+		if(button==GLUT_RIGHT_BUTTON && state==GLUT_DOWN){
+			hideParticle(x,y);
+			redisplay=true;
+		}
 		if(button==3||button==4){
 			zoom=zoom+(button*2-7)*1.5f; // put wheel up and down in one
 			if(zoom<-58)zoom=-58.0f;
