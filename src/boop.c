@@ -228,7 +228,7 @@ void q(int l, float *box, float cutoff, float *result){
 }
 
 //////////////////////////////////* Work in Progress *///////////////////////////////////
-void crystallinity(float *box, float cutoff, float crystcut, uint nbonds){
+void crystallinity(float *box, float cutoff, float crystcut){
 	//////////////////////////////////////////////////////////
 	//  Calculates the Bond Order Orientational Parameter	//
 	//	for a configuration of particles.					//
@@ -296,8 +296,16 @@ void crystallinity(float *box, float cutoff, float crystcut, uint nbonds){
 				}
 			}
 		}
-		if(bonds > nbonds){
+		if(bonds >= 9){
 			particle[i].solid = 1;
+			crystal++;
+		}
+		else if(bonds >= 7){
+			particle[i].solid = 2;
+			crystal++;
+		}
+		else if(bonds >= 5){
+			particle[i].solid = 3;
 			crystal++;
 		}
 		else particle[i].solid = 0;

@@ -117,7 +117,7 @@ static void keyOps(void){
 		}
 		
 		if(keyMap['q']){
-			crystallinity(boxMatrix, 1.4, 0.7, 9);
+			crystallinity(boxMatrix, 1.4, 0.7);
 			redisplay=true;
 		}
 	

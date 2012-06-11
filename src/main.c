@@ -85,12 +85,10 @@ void renderShape(void){
 				glCallList(sphereDL);
 				glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);//Reset Material
 			}
-			else if(particle[i].solid){
-				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,SeaGreen);
+			else{
+				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,CrystalColors[particle[i].solid]);
 				glCallList(sphereDL);
-				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,MediumSlateBlue);
 			}
-			else glCallList(sphereDL);
 		}
 		glPopMatrix();
 	}
