@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "uint.h"
-#include "particles.h"
-#include "common.h"
-#include "selection.h"
+#include "../include/uint.h"
+#include "../include/particles.h"
+#include "../include/common.h"
+#include "../include/selection.h"
 
 ///////////////////////////////////////
 //extern//GLuint sphereDL;			 //

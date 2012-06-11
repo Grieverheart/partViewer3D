@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "uint.h"
-#include "coord_parser.h"
-#include "particles.h"
-#include "common.h"
+#include "../include/uint.h"
+#include "../include/coord_parser.h"
+#include "../include/particles.h"
+#include "../include/common.h"
 
 tPart *particle=NULL;
 float boxMatrix[9];

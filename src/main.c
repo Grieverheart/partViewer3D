@@ -5,14 +5,15 @@
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
-#include "uint.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "particles.h"
-#include "coord_parser.h"
-#include "draw.h"
-#include "colors.h"
-#include "common.h"
+#include "../include/uint.h"
+#include "../include/keyboard.h"
+#include "../include/mouse.h"
+#include "../include/particles.h"
+#include "../include/coord_parser.h"
+#include "../include/draw.h"
+#include "../include/colors.h"
+#include "../include/common.h"
+#include "../include/boop.h"
 
 ////////////////////////////////////////////////////////
 //extern// tPart *particle;				       		/**/
@@ -84,6 +85,11 @@ void renderShape(void){
 				glCallList(sphereDL);
 				glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);//Reset Material
 			}
+			else if(particle[i].solid){
+				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,SeaGreen);
+				glCallList(sphereDL);
+				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,MediumSlateBlue);
+			}
 			else glCallList(sphereDL);
 		}
 		glPopMatrix();
@@ -95,11 +101,16 @@ static void display(void){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	char string[20];
 	glLoadIdentity();
-	sprintf(string,"FPS:%02.0f",fps);
+	sprintf(string,"FPS: %02.0f",fps);
 	glPrint(string,5,15);
-	if(animation){
-		sprintf(string,"Frame:%03d",ani_frame);
+	if(crystal > 0.0){
+		sprintf(string,"C: %.2f%%",crystal);
 		glPrint(string,5,30);
+	}
+	if(animation){
+		sprintf(string,"Frame: %03d",ani_frame);
+		if(crystal > 0.0) glPrint(string,5,45);
+		else glPrint(string,5,30);
 	}
 	
 	renderShape();
@@ -218,6 +229,7 @@ int main(int argc,char *argv[] ){
 	for(uint i = 0; i < nPart; i++){
 		particle[i].selected = 0;
 		particle[i].hidden = 0;
+		particle[i].solid = 0;
 	}
 	if(use_obj)parseObj(argv[obj_index]);
 	init();

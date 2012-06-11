@@ -1,14 +1,16 @@
-SRC=$(wildcard *.c)
-OBJ=$(SRC:.c=.o)
+SRC=$(wildcard src/*.c)
+OBJ=$(patsubst src/%.c, bin/%.o, $(SRC))
 EXE=partViewer.exe
 
 CC=gcc
 CFLAGS=-Wall -O3 -std=c99
 LDFLAGS=-lglu32 -lfreeglut -lopengl32
-RM=del
+RM=del /q
 
-%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+vpath %.o bin/
+
+bin/%.o: src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: all
 all: $(EXE)
@@ -19,5 +21,5 @@ $(EXE): $(OBJ)
 	
 .PHONY: clean
 clean:
-	-$(RM) $(OBJ)
+	-$(RM) bin\*
 	@echo Clean Done!

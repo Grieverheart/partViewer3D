@@ -2,11 +2,11 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "uint.h"
-#include "draw.h"
+#include "../include/uint.h"
+#include "../include/draw.h"
 #include <math.h>
-#include "common.h"
-#include "colors.h"
+#include "../include/common.h"
+#include "../include/colors.h"
 
 //////////////////////////////////////////////////////
 //extern// int screen_width,screen_height; 	      /**/
@@ -204,7 +204,7 @@ GLuint createShapeDL(void){
 	GLuint shapeDL;
 	shapeDL=glGenLists(1);
 	
-	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,blue);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,MediumSlateBlue);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,sh_white);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,shininess);
 	

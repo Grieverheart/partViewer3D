@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
-#include "uint.h"
-#include "mouse.h"
-#include "selection.h"
-#include "common.h"
+#include "../include/uint.h"
+#include "../include/mouse.h"
+#include "../include/selection.h"
+#include "../include/common.h"
 
 //////////////////////////////////////////////////////
 //extern// int screen_width,screen_height; 	      /**/

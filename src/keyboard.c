@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "uint.h"
-#include "keyboard.h"
-#include "particles.h"
-#include "common.h"
+#include "../include/uint.h"
+#include "../include/keyboard.h"
+#include "../include/particles.h"
+#include "../include/common.h"
+#include "../include/boop.h"
 
 ////////////////////////////////////////
 //extern// tPart *particle; 		/**/
@@ -87,6 +88,7 @@ static void keyOps(void){
 			for(uint i=0;i<nPart;i++){
 				particle[i].selected=0;
 				particle[i].hidden=0;
+				particle[i].solid = 0;
 			}
 			scale = 1.0;
 			redisplay=true;
@@ -111,6 +113,21 @@ static void keyOps(void){
 		
 		if(keyMap['[']){ 
 			scale /= 1.05;
+			redisplay=true;
+		}
+		
+		if(keyMap['q']){
+			crystallinity(boxMatrix, 1.4, 0.7, 9);
+			redisplay=true;
+		}
+	
+		if(keyMap['h']){
+			static bool onoff = 0;
+			onoff = !onoff;
+			for(uint i = 0; i < nPart; i++){
+				if(!particle[i].solid && onoff) particle[i].hidden = 1;
+				if(!particle[i].solid && !onoff) particle[i].hidden = 0;
+			}
 			redisplay=true;
 		}
 	}
