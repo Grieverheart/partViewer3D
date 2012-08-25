@@ -22,7 +22,9 @@ static void renderInSelection(void){
 	glLoadIdentity(); //Just to be sure
 	glTranslatef(0.0f,0.0f,-22.0f);//Fix Zoom
 	glMultMatrixf(ThisRotMatrix);
-	glTranslatef(-boxMatrix[0]/2.0f,-boxMatrix[4]/2.0f,-boxMatrix[8]/2.0f); //Center Box
+	glTranslatef(-(boxMatrix[0]+boxMatrix[1]+boxMatrix[2])/2.0f,
+				 -(boxMatrix[4]+boxMatrix[5])/2.0f,
+				 -boxMatrix[8]/2.0f); //Center Box
 	
 	for(uint i=0;i<nPart;i++){
 		if(!particle[i].hidden){
