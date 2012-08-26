@@ -7,6 +7,9 @@ void specialUp(int key, int x, int y);
 extern bool box_display;
 extern bool render_points;
 extern bool pause;
+extern bool rotating;
 extern float ani_speed;
 extern float scale;
+extern uint ani_frame;
+extern const GLfloat* CrystalColors[4];
 #endif

@@ -21,19 +21,21 @@
 //extern// uint nPart;					   	   		/**/
 //extern// GLfloat ThisRotMatrix[16];				/**/
 //extern// bool render_points;						/**/
+//extern// bool rotating;							/**/
 ////////////////////////////////////////////////////////
 /**/int screen_width=0,screen_height=0;		   		/**/
 /**/bool redisplay=false;					   		/**/
 /**/bool use_obj;									/**/
-/**/float zoom=0;							   		/**/
-/**/float scale=1.0;								/**/
+/**/float zoom=0.0f;						   		/**/
+/**/float scale=1.0f;								/**/
 /**/float init_zoom=-22.0f;							/**/
-/**/static float fps=60.0;	 						/**/
+/**/static float fps=60.0f;	 						/**/
 /**/bool animation=false;							/**/
 /**/char **ani_matrix;								/**/
 /**/uint ani_files=0;								/**/
 /**/uint ani_frame=1;								/**/
-/**/float ani_speed=1000.0;							/**/
+/**/float ani_speed=1000.0f;						/**/
+/**/float rot_speed = 0.5f;							/**/
 ////////////////////////////////////////////////////////
 /**/GLuint sphereDL;      							/**/
 ////////////////////////////////////////////////////////
@@ -42,6 +44,32 @@
 /**/					   {-0.3f,1.0f,0.5f,0.5f},  /**/
 /**/					   {-0.3f,0.6f,0.5f,0.5f}}; /**/
 ////////////////////////////////////////////////////////
+/**/const GLfloat* CrystalColors[] = {				/**/
+/**/	MediumSlateBlue,                            /**/
+/**/	SeaGreen,                                   /**/
+/**/	Maroon,                                     /**/
+/**/	Sienna};                                    /**/
+////////////////////////////////////////////////////////
+
+static inline void multMatrixBA4f(GLfloat *A,GLfloat *B){
+	GLfloat sum;
+    GLfloat C[16];
+	
+    for(uint i=0;i<3;i++){
+        for(uint k=0;k<3;k++){
+            sum=0.0f;
+            for(uint j=0;j<3;j++){
+                sum+=B[4*j+i]*A[4*k+j];   
+            }
+            C[4*k+i]=sum;
+        }
+    }
+    for(uint i=0;i<3;i++){
+		for(uint j=0;j<3;j++){
+			A[4*j+i]=C[4*j+i];
+		}
+	}
+}
 
 static void countFPS(void){
 	static uint frame=0;
@@ -60,6 +88,17 @@ static void countFPS(void){
 void renderShape(void){
 	glTranslatef(0.0f,0.0f,init_zoom);//Fix Zoom
 	if(menu_open)glTranslatef(boxMatrix[0]/2.0f,0.0f,0.0f);
+	if(rotating){
+		float tempc = cosf(rot_speed*2.0f*PI / 360.0f);
+		float temps = sinf(rot_speed*2.0f*PI / 360.0f);
+		float tempMatrix[16] = {
+			tempc,	0.0f,	-temps,	0.0f,
+			0.0f,	1.0f,	0.0f,	0.0f,
+			temps,	0.0f,	tempc,	0.0f,
+			0.0f,	0.0f,	0.0f,	1.0f
+		};
+		multMatrixBA4f(ThisRotMatrix, tempMatrix);
+	}
 	glMultMatrixf(ThisRotMatrix);
 	glTranslatef(-(boxMatrix[0]+boxMatrix[1]+boxMatrix[2])/2.0f,
 				 -(boxMatrix[4]+boxMatrix[5])/2.0f,
@@ -121,7 +160,8 @@ static void idle(void){
 	static uint this_time=0;
 	
 	if(animation&&!pause){
-		if(ani_frame>=ani_files)ani_frame=0;
+		if(ani_frame >= ani_files)ani_frame = 0;
+		else if(ani_frame < 0) ani_frame += ani_files;
 		this_time=glutGet(GLUT_ELAPSED_TIME);
 		if(this_time-last_time>=ani_speed){
 			redisplay=true;
@@ -130,7 +170,9 @@ static void idle(void){
 			last_time=this_time;
 		}
 	}
-	
+	if(rotating){
+		redisplay = true;
+	}
 	idleArcball();
 	
 	if(redisplay){

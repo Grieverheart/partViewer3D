@@ -62,14 +62,34 @@ void PrintMenu(void){
 			P:\n\
 			Esc:\n\
 			M:\n\
-			B:",x,y);
+			B:\n\
+			R:\n\
+			O:\n\
+			C:\n\
+			Left,Right:\n\
+			Q:\n\
+			H:\n\
+			],[\n\
+			+,-:\n\
+			\n\
+			S:",x,y);
 			
 	glPrint("Reset Rotation\n\
 			Toggle Fullscreen Mode\n\
 			Toggle Point Rendering Mode\n\
 			Exit Program\n\
 			Toggle Menu\n\
-			Toggle Box",x+80,y+15);          
+			Toggle Box\n\
+			Toggle Rotation around y-axis\n\
+			Toggle Perspective\n\
+			Reset Attributes\n\
+			Shift through different colors\n\
+			Calculate Crystallinity\n\
+			Hide non-crystalline particles\n\
+			Increase/Decrease particle scale\n\
+			Increase/Decrease Animation Speed\n\
+			(Animation mode only)\n\
+			Pause Animation (Animation mode only)",x+80,y+15);          
 }
 
 void screenFade(void){

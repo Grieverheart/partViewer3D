@@ -9,6 +9,7 @@
 #include "../include/particles.h"
 #include "../include/common.h"
 #include "../include/boop.h"
+#include "../include/colors.h"
 
 ////////////////////////////////////////
 //extern// tPart *particle; 		/**/
@@ -27,6 +28,7 @@
 /**/bool menu_open=false;			/**/
 /**/bool perspective=true;			/**/
 /**/bool pause=false;				/**/
+/**/bool rotating = false;			/**/
 ////////////////////////////////////////
 
 static void keyOps(void);
@@ -52,7 +54,10 @@ void specialUp(int key, int x, int y){
 
 static void keyOps(void){
 	if(!menu_open){
-		if(keyMap['a'])printf("a\n");
+		if(keyMap['r']){
+			rotating=!rotating;
+			redisplay=true;
+		}
 		
 		if(keyMap['b']){
 			box_display=!box_display;
@@ -159,10 +164,21 @@ static void keyOps(void){
 }
 
 static void keySpOps(void){
+	static int cur_color = 0;
 	if(keySpMap[GLUT_KEY_F1]){
 		if(!keyRepeat)printf("Key Repeat Enabled\n");
 		else printf("Key Repeat Disabled\n");
 		keyRepeat=!keyRepeat;
 		glutSetKeyRepeat(keyRepeat);
+	}
+	if(keySpMap[GLUT_KEY_RIGHT]){
+		cur_color = (cur_color + 1) % num_colors;
+		CrystalColors[0] = colorPick[cur_color];
+		redisplay = true;
+	}
+	if(keySpMap[GLUT_KEY_LEFT]){
+		cur_color = (cur_color + num_colors - 1) % num_colors;
+		CrystalColors[0] = colorPick[cur_color];
+		redisplay = true;
 	}
 }
