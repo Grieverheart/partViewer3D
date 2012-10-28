@@ -10,12 +10,15 @@
 #include "../include/common.h"
 #include "../include/boop.h"
 #include "../include/colors.h"
+#include "../include/displaylistPrimitive.h"
+#include "../include/diffraction.h"
 
 ////////////////////////////////////////
 //extern// tPart *particle; 		/**/
 //extern// bool arcball_snap;		/**/
 //extern// float ani_speed;			/**/
 //extern// float scale;				/**/
+//extern// float csg_boxSize;       /**/
 ////////////////////////////////////////
 /**/bool keyMap[256];	  			/**/
 /**/bool keySpMap[256];				/**/
@@ -29,6 +32,8 @@
 /**/bool perspective=true;			/**/
 /**/bool pause=false;				/**/
 /**/bool rotating = false;			/**/
+/**/bool renderdiff = false;		/**/
+/**/bool diffr_init_ok = false; 	/**/
 ////////////////////////////////////////
 
 static void keyOps(void);
@@ -57,6 +62,15 @@ static void keyOps(void){
 		if(keyMap['r']){
 			rotating=!rotating;
 			redisplay=true;
+		}
+		
+		if(keyMap['d']){
+			if(!diffr_init_ok){
+				diffrInit();
+				diffr_init_ok = true;
+			}
+			renderdiff = !renderdiff;
+			redisplay = true;
 		}
 		
 		if(keyMap['b']){
@@ -99,6 +113,13 @@ static void keyOps(void){
 			redisplay=true;
 		}
 		
+		if(keyMap['i']){
+			csg_mode=!csg_mode;
+			if(!use_obj && !csg_mode) glDisable(GL_LIGHT1);
+			else if(!use_obj && csg_mode) glEnable(GL_LIGHT1);
+			redisplay=true;
+		}
+		
 		if(keyMap['+']){ 
 			ani_speed/=2.0f;
 		}
@@ -111,13 +132,21 @@ static void keyOps(void){
 			pause=!pause;
 		}
 		
-		if(keyMap[']']){ 
-			scale *= 1.05;
+		if(keyMap[']']){
+		    if(csg_mode){
+		        csg_boxSize *= 1.05f;
+		        CSGResizeBox(csg_boxSize);
+		    } 
+			else scale *= 1.05;
 			redisplay=true;
 		}
 		
 		if(keyMap['[']){ 
-			scale /= 1.05;
+		    if(csg_mode){
+		        csg_boxSize /= 1.04f;
+		        CSGResizeBox(csg_boxSize);
+		    } 
+			else scale /= 1.04;
 			redisplay=true;
 		}
 		
@@ -138,7 +167,13 @@ static void keyOps(void){
 	}
 	
 	if(keyMap[27]){
+		renderdiff = false;
 	    free(particle);
+		diffrClean();
+		
+	    clearCSGList();
+	    glDeleteLists(sphereDL, 1);
+	    glDeleteLists(CSGDL, 1);
 		glutLeaveMainLoop();
 	}
 	

@@ -39,7 +39,9 @@ void parseCoords(char *file, char *delim){
 				boxMatrix[u]=atof(t1);
 			}
 			else if(i>2){
-				if(u<3)particle[i-3].coords[u]=atof(t1);
+				if(u<3){
+					particle[i-3].coords[u]=atof(t1);
+				}
 				else particle[i-3].rotation[u-3]=atof(t1);
 			}
 			u++;

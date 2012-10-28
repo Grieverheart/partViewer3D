@@ -66,10 +66,14 @@ void PrintMenu(void){
 			R:\n\
 			O:\n\
 			C:\n\
+			R:\n\
+			D:\n\
+			I\n\
 			Left,Right:\n\
 			Q:\n\
 			H:\n\
 			],[\n\
+			\n\
 			+,-:\n\
 			\n\
 			S:",x,y);
@@ -85,8 +89,12 @@ void PrintMenu(void){
 			Reset Attributes\n\
 			Shift through different colors\n\
 			Calculate Crystallinity\n\
+			Toggle Rotation around y-axis\n\
+			Display Diffraction\n\
+			Render in CSG Mode\n\
 			Hide non-crystalline particles\n\
 			Increase/Decrease particle scale\n\
+			(Box Size in CSG Mode)\n\
 			Increase/Decrease Animation Speed\n\
 			(Animation mode only)\n\
 			Pause Animation (Animation mode only)",x+80,y+15);          
@@ -185,7 +193,7 @@ static inline void cross3fn(GLfloat *a, GLfloat *b, GLfloat *result){
 	}
 }
 
-static inline void obj_shape(void){
+static inline void obj_shape(bool flip){
 	GLfloat normal[3];
 	GLfloat vec1[3],vec2[3];
 	uint vertex=0;
@@ -210,6 +218,9 @@ static inline void obj_shape(void){
 			vec2[v]=obj_vertices[3*vert1+v]-obj_vertices[3*vert2+v];
 		}
 		cross3fn(vec1,vec2,normal);
+		if(flip){
+		    for(uint j = 0; j < 3; j++) normal[j] = -normal[j];
+		}
 		glBegin(mode);
 			glNormal3fv(normal);
 			for(uint j=0;j<obj_nVpF;j++){
@@ -220,7 +231,7 @@ static inline void obj_shape(void){
 	}
 }
 
-GLuint createShapeDL(void){
+GLuint createShapeDL(bool flip){
 	GLuint shapeDL;
 	shapeDL=glGenLists(1);
 	
@@ -229,8 +240,12 @@ GLuint createShapeDL(void){
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,shininess);
 	
 	glNewList(shapeDL,GL_COMPILE);
-		if(use_obj)obj_shape();
-		else glutSolidSphere(0.5f,30,30);
+		if(use_obj) obj_shape(flip);
+		else{
+		    GLUquadric* sphere = gluNewQuadric();
+		    gluSphere(sphere, 0.5, 20, 20);
+		    gluDeleteQuadric(sphere);
+		}
 	glEndList();
 	
 	return (shapeDL);

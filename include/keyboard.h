@@ -8,8 +8,12 @@ extern bool box_display;
 extern bool render_points;
 extern bool pause;
 extern bool rotating;
+extern bool csg_mode;
+extern bool renderdiff;
+extern bool use_obj;
 extern float ani_speed;
 extern float scale;
+extern float csg_boxSize;
 extern uint ani_frame;
 extern const GLfloat* CrystalColors[4];
 #endif

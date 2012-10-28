@@ -7,6 +7,7 @@ extern bool menu_open;
 extern int screen_width,screen_height;
 extern float boxMatrix[9];
 extern GLuint sphereDL;
+extern GLuint CSGDL;
 extern GLfloat ThisRotMatrix[16];
 static const GLfloat fov=60.0f;
 extern float zoom;
